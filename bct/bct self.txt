@@ -1,0 +1,174 @@
+CONTRACT 1: BankAccount.sol (Financial Logic)
+This contract simulates a basic bank account, allowing users to hold and transfer Ether.
+
+BankAccount.sol Explanation (Text Copy Format)
+
+This contract simulates a simple bank account on the Ethereum blockchain, allowing users to deposit and withdraw Ether.
+
+uint public balance;
+
+Declares a public state variable named balance of type unsigned integer.
+
+This stores the total Ether held by the contract.
+
+Because it is marked public, Solidity automatically creates a getter function balance().
+
+function deposit() public payable
+
+This function allows users to deposit Ether into the contract.
+
+The keyword payable is necessary because only payable functions can receive Ether.
+
+When the function is called, the amount of Ether sent (msg.value) is added to balance.
+
+function withdraw(uint amount) public
+
+This function allows the user to withdraw Ether from the contract.
+
+require(balance >= amount, "Insufficient balance");
+
+This checks that the contract has enough balance.
+
+If not, the transaction is reverted.
+
+balance -= amount;
+
+Updates the stored balance after withdrawal.
+
+payable(msg.sender).transfer(amount);
+
+Sends the withdrawn Ether back to the user.
+
+msg.sender is converted to a payable address before transferring.
+
+function getBalance() public view returns (uint)
+
+This function returns the current balance.
+
+view indicates that the function only reads the state and does not modify it.
+
+2) StudentData.sol Explanation (Text Copy Format)
+
+This contract shows how to use structs and arrays to store student records.
+
+struct Student { uint id; string name; uint age; }
+
+Defines a custom data type to store student information.
+
+This struct groups id, name, and age together.
+
+Student[] public students;
+
+Declares a dynamic array of Student data type.
+
+Marked public, so Solidity automatically provides a getter to access individual students.
+
+function addStudent(uint _id, string memory _name, uint _age) public
+
+Adds a new student record to the array.
+
+_name is stored in memory because it is passed temporarily during function execution.
+
+Uses students.push(Student(_id, _name, _age)); to add the student to the array.
+
+function getStudent(uint index) public view returns (uint, string memory, uint)
+
+Returns the student details stored at a given array index.
+
+Uses view because it only reads the stored data.
+
+fallback() external payable {}
+
+Runs when a call is made to a non-existing function.
+
+Marked payable so the contract can accept Ether sent with unexpected data.
+
+receive() external payable {}
+
+Automatically executed when the contract receives Ether without any function call.
+
+Preferred for simple Ether transfers.
+
+Viva Questions and Answers
+
+1. What is msg.value?
+msg.value stores the amount of Ether (in Wei) sent with the current transaction.
+
+2. Why is the deposit function marked payable?
+Without the payable keyword, the function cannot receive Ether.
+
+3. What is the purpose of require in withdraw()?
+It ensures the contract has enough balance before allowing withdrawal. If false, the transaction reverts.
+
+4. Why do we use payable(msg.sender).transfer(amount)?
+Addresses are non-payable by default. We must convert to payable before sending Ether.
+
+5. What is the advantage of using a struct in StudentData.sol?
+A struct groups related data together so the contract is more organized and easier to manage.
+
+6. What is the difference between receive() and fallback()?
+
+receive(): Called when Ether is sent without data.
+
+fallback(): Called when a non-existing function is invoked or Ether is sent with data.
+
+7. Why is memory used for string parameters?
+string data is dynamically sized, so memory stores it temporarily and reduces storage cost.
+
+-----
+
+VIVA Q&A: BankAccount.sol
+
+Q1. What does this smart contract do?
+This contract behaves like a simple bank account. It allows users to deposit Ether, withdraw Ether, and check the balance stored in the contract.
+
+Q2. Why do we use payable in the deposit function?
+payable allows the function to receive Ether. Without payable, the function cannot accept any cryptocurrency transfer.
+
+Q3. What is msg.value?
+msg.value stores the amount of Ether (in Wei) that is sent with a transaction.
+
+Q4. What is msg.sender?
+msg.sender is the address of the account (or contract) that is calling the function.
+
+Q5. Why do we use require(balance >= amount) in withdraw()?
+To ensure that the contract has enough balance to withdraw. If the condition fails, the transaction is reverted.
+
+Q6. Why is payable(msg.sender) used before .transfer()?
+Because addresses are not payable by default. We must convert the caller’s address to a payable type before sending Ether.
+
+Q7. What does the function getBalance() do?
+It is a view function that returns the current value of the contract balance without modifying the blockchain state.
+
+Q8. What happens if someone sends Ether directly without calling a function?
+If implemented, the receive() or fallback() function will handle it. Otherwise, the transaction will fail.
+
+VIVA Q&A: StudentData.sol
+
+Q1. What is a struct?
+A struct is a custom data type that allows grouping of multiple related variables under one name.
+
+Q2. What does the students array store?
+It stores multiple Student records. Each record contains ID, name, and age of a student.
+
+Q3. Why is students declared as public?
+So that Solidity automatically creates a getter function to access student data.
+
+Q4. What does memory mean in the function parameters?
+memory indicates that the variable is stored temporarily during function execution, not permanently on the blockchain.
+
+Q5. How do we add a student in the contract?
+By calling addStudent(id, name, age) which pushes a new Student struct into the students array.
+
+Q6. What does the function getStudent() return?
+It returns the details (id, name, age) of the student stored at a specific index in the array.
+
+Q7. What is the difference between fallback() and receive()?
+
+Function	When it is Triggered	Purpose
+receive()	Ether sent with no data	Simple Ether transfer
+fallback()	Unknown function call / Ether with data	Backup handler
+
+Q8. Why does Solidity need structs and arrays?
+To store structured and multiple records efficiently without using separate variables.
+

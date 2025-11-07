@@ -1,0 +1,95 @@
+Huffman Encoding is a lossless compression technique used to reduce the number of bits required to represent data.
+It assigns shorter binary codes to more frequent characters and longer codes to less frequent characters, minimizing total storage.
+
+It follows a Greedy Strategy because at every step, it selects the two nodes with the smallest frequency and merges them.
+
+Steps (Algorithm)
+
+Take input characters and their frequencies.
+
+Create a separate node for each character.
+
+Insert all nodes into a min-heap (priority queue).
+
+Repeat until only one node remains:
+
+Extract the two smallest-frequency nodes.
+
+Create a new parent node with frequency = sum of the two.
+
+Set the two nodes as left (0) and right (1) children.
+
+Insert the new node back into the min-heap.
+
+Perform tree traversal to assign binary codes:
+
+Left edge = 0
+
+Right edge = 1
+
+Display the generated Huffman Codes.
+
+Example
+
+Characters: A B C D E F
+Frequencies: 5 9 12 13 16 45
+
+Final Huffman Codes might be:
+
+F: 0
+C: 100
+D: 101
+A: 1100
+B: 1101
+E: 111
+
+
+(May vary depending on heap tie order, but code lengths follow frequency rule.)
+
+Code Explanation (Line-by-Line Viva Style)
+Code Part	Explanation
+class Node:	Defines a tree node containing character and frequency.
+__lt__	Overloads < so nodes can be compared inside min-heap based on frequency.
+print_codes()	Recursively traverses tree and prints codes. Left adds 0, right adds 1.
+heapq.heapify(heap)	Converts list into a min-heap so smallest frequency stays at top.
+heappop()	Removes and returns minimum frequency node.
+merged = Node(None, left.freq + right.freq)	Creates an internal node combining frequencies of two smallest nodes.
+print_codes(root)	After building tree, prints Huffman codes using DFS.
+Why Greedy Strategy?
+
+Because at every step, we choose two smallest frequency nodes (local optimal choice) and this leads to a globally optimal prefix code tree.
+
+Advantages
+
+Produces optimal prefix-free codes (no code is a prefix of another).
+
+Reduces storage and transmission size.
+
+Widely used in real-world compression algorithms.
+
+Disadvantages
+
+Requires frequency table prior to encoding.
+
+Decoding requires the same Huffman Tree.
+
+If frequencies change, re-building is required.
+
+Real Life Applications
+
+ZIP / RAR files compression
+
+JPEG / MP3 intermediate compression steps
+
+Text compression in UNIX (e.g., gzip)
+
+Sending data efficiently over networks.
+
+Important Viva Questions
+Question	Answer
+What is Huffman Encoding?	A lossless compression method that assigns variable-length codes based on character frequency.
+Why shorter codes to frequent characters?	To minimize the total number of bits used for the entire message.
+What data structure is used?	Min-Heap / Priority Queue
+Why is it called prefix-free coding?	Because no code is the prefix of another code.
+Is it lossless or lossy?	Lossless
+Time Complexity?	O(n log n) due to heap operations.

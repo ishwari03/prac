@@ -1,0 +1,284 @@
+
+## ✅ Smart Contract: *Bank Account*
+
+```solidity
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
+
+contract Bank {
+    address public accOwner;
+
+    // Constructor sets the deployer as account owner
+    constructor() {
+        accOwner = msg.sender;
+    }
+
+    // Restrict certain functions to only the owner
+    modifier onlyOwner() {
+        require(msg.sender == accOwner, "You are not the account owner!");
+        _;
+    }
+
+    // Deposit Ether into the contract
+    function deposit() public payable onlyOwner {
+        require(msg.value > 0, "Deposit amount must be greater than 0");
+    }
+
+    // Withdraw Ether from the contract
+    function withdraw(uint256 amount) public onlyOwner {
+        require(amount > 0, "Withdraw amount must be greater than 0");
+        require(amount <= address(this).balance, "Insufficient balance!");
+        payable(msg.sender).transfer(amount);
+    }
+
+    // View contract balance
+    function showBalance() public view onlyOwner returns (uint256) {
+        return address(this).balance;
+    }
+
+    // Fallbacks to accept Ether
+    receive() external payable {}
+    fallback() external payable {}
+}
+```
+
+---
+
+## 🧠 Concept Explanation
+
+This contract acts like a simple **Bank account** on the Ethereum blockchain.
+
+* **`deposit()`** → allows the owner to deposit Ether.
+* **`withdraw(amount)`** → sends specified Ether to owner’s address.
+* **`showBalance()`** → displays contract balance in Wei.
+* Uses a **modifier (`onlyOwner`)** to ensure only the account owner can perform operations.
+* Uses **constructor** to set the contract deployer as the owner.
+
+---
+
+## 💡 Example Run (on Remix IDE / Sepolia Testnet)
+
+**Step 1:**
+Compile → Deploy on test network (like Sepolia / Goerli) using Remix IDE’s “Injected Provider – MetaMask”.
+
+**Step 2:**
+Call → `deposit()` and enter **value = 1 ether** in Remix Value field → click “transact”.
+
+**Step 3:**
+Call → `showBalance()` → Output: `1000000000000000000` (i.e., 1 Ether).
+
+**Step 4:**
+Call → `withdraw(500000000000000000)` → withdraw 0.5 Ether.
+
+**Step 5:**
+Call → `showBalance()` → Output: `500000000000000000`.
+
+---
+
+## ⚙️ Viva / Oral Questions & Model Answers
+
+---
+
+### 🔹 **1. Enlist different ways to write, compile, and deploy a smart contract.**
+
+**Answer:**
+
+| Step            | Tool / Method                                                                                            | Description                                     |
+| --------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| **Writing**     | - **Remix IDE (online)**  <br>- **VS Code + Hardhat/Truffle**                                            | Used to write Solidity (.sol) code.             |
+| **Compilation** | - Solidity Compiler in Remix  <br>- `solc` (command-line)                                                | Converts Solidity → EVM bytecode + ABI.         |
+| **Deployment**  | - Remix (one-click deploy) <br>- **Hardhat / Truffle scripts** <br>- Using **MetaMask + Infura/Alchemy** | Sends bytecode to blockchain (mainnet/testnet). |
+| **Interaction** | - Remix UI  <br>- **Web3.js / Ethers.js (JavaScript)** <br>- CLI via **Hardhat**                         | Used to call contract functions.                |
+
+✅ *In short: write → compile → deploy → interact.*
+
+---
+
+### 🔹 **2. What is ERC20 Standard? Explain in detail.**
+
+**Answer:**
+
+**ERC-20** = *Ethereum Request for Comment #20*, a **token standard** defining rules for fungible tokens.
+
+**Meaning:** all ERC-20 tokens behave identically, so wallets and exchanges can interact easily.
+
+**Key Functions (as per the standard):**
+
+| Function                         | Purpose                                 |
+| -------------------------------- | --------------------------------------- |
+| `totalSupply()`                  | Returns total tokens issued.            |
+| `balanceOf(address)`             | Returns token balance of an account.    |
+| `transfer(to, amount)`           | Sends tokens to another address.        |
+| `approve(spender, amount)`       | Authorizes spender to spend tokens.     |
+| `transferFrom(from, to, amount)` | Executes transfer on behalf of another. |
+| `allowance(owner, spender)`      | Checks approved limit.                  |
+
+**Events:** `Transfer`, `Approval`.
+
+**Example:**
+Tokens like **USDT, LINK, UNI, BAT** follow ERC-20, allowing them to be traded uniformly.
+
+**Advantages:**
+
+* Interoperability across wallets/dApps.
+* Standardized interface.
+* Easy integration with DeFi protocols.
+
+---
+
+### 🔹 **3. What is a Testnet? How it works? List different testnets.**
+
+**Answer:**
+
+**Testnet** = *Blockchain network used for testing without real money.*
+
+**How it works:**
+
+* Same protocol and consensus as Ethereum mainnet.
+* Uses **fake Ether (test ETH)** obtained via **faucets**.
+* Developers deploy & test contracts safely before going live.
+
+**Popular Testnets (Ethereum):**
+
+| Testnet                                         | Consensus      | Description                                  |
+| ----------------------------------------------- | -------------- | -------------------------------------------- |
+| **Sepolia**                                     | Proof of Stake | Lightweight, current official testnet.       |
+| **Goerli**                                      | Proof of Stake | Used for cross-client testing.               |
+| **Holesky**                                     | Proof of Stake | Large-scale stress-testing network (newest). |
+| *(Older)* Rinkeby, Kovan, Ropsten → Deprecated. |                |                                              |
+
+✅ Use **MetaMask + Remix** connected to Sepolia → deploy with free faucet ETH.
+
+---
+
+## ⚡ Practical-Level Viva Questions (with short answers)
+
+| Q                                                            | A                                                                            |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| **What language is used for smart contracts?**               | Solidity (inspired by C++/Python).                                           |
+| **What is EVM?**                                             | Ethereum Virtual Machine — executes smart contract bytecode.                 |
+| **What is `msg.sender`?**                                    | Address of the account or contract that called the function.                 |
+| **What is `msg.value`?**                                     | Amount of Ether (in Wei) sent with the transaction.                          |
+| **Why use `payable` keyword?**                               | Allows function to receive Ether.                                            |
+| **Difference between `view`, `pure`, and normal functions?** | `view` reads state; `pure` reads nothing; normal can modify state.           |
+| **Why use modifiers (like onlyOwner)?**                      | To restrict access and avoid repetitive `require` statements.                |
+| **How is Ether balance checked?**                            | `address(this).balance` → current contract balance.                          |
+| **What happens if deposit called without payable?**          | Transaction fails; Ether cannot be sent.                                     |
+| **Purpose of fallback & receive?**                           | Accept Ether directly when no data or unmatched function called.             |
+| **What is gas?**                                             | Unit of computational cost for executing operations on EVM.                  |
+| **How to estimate gas cost?**                                | Shown in Remix or via `eth_estimateGas` in web3.                             |
+| **What is ABI?**                                             | Application Binary Interface — defines contract’s callable methods & events. |
+| **What is MetaMask?**                                        | Browser wallet that connects to Ethereum & testnets, signs transactions.     |
+| **How to convert Wei → Ether?**                              | 1 Ether = 10¹⁸ Wei.                                                          |
+| **Security practices for real deployment?**                  | Use OpenZeppelin libraries, limit ownership, audit before mainnet.           |
+
+---
+
+## 💰 Example Demonstration (for viva)
+
+**Scenario:**
+
+1. Deploy the Bank contract (owner = your MetaMask address).
+2. Call `deposit()` with 1 ETH.
+3. `showBalance()` → returns 1e18 Wei.
+4. Call `withdraw(0.5 ETH)` → balance reduces to 0.5 ETH.
+5. `showBalance()` → returns 5e17 Wei.
+
+**You can explain:** “All logic executes on blockchain; contract holds Ether, not the wallet.”
+
+---
+
+## ⚙️ Technical Summary
+
+| Concept              | Detail                                                                |
+| -------------------- | --------------------------------------------------------------------- |
+| **Compiler version** | ^0.8.0                                                                |
+| **Main keywords**    | `constructor`, `modifier`, `payable`, `require`, `transfer`           |
+| **Functions**        | deposit(), withdraw(), showBalance()                                  |
+| **Access Control**   | Only owner can operate                                                |
+| **Deployment**       | Remix + MetaMask on Sepolia testnet                                   |
+| **Gas usage**        | Each transaction consumes gas proportional to computation and storage |
+
+---
+
+## 🌍 Real-World Applications
+
+1. **Decentralized banking / savings contracts** — handle deposits, withdrawals, interest logic.
+2. **Escrow / payment wallets** — hold funds until conditions met.
+3. **Crowdfunding / donation dApps** — track balances per user transparently.
+4. **DeFi protocols** — foundation for lending, staking, yield vaults.
+
+---
+
+## 🧩 Extra viva pointers
+
+* Distinguish *mainnet* (real ETH) vs *testnet* (fake ETH).
+* Always mention safety: never deploy untested code on mainnet.
+* Know that this contract is *stateful* (balance stored on-chain).
+* Mention that `transfer()` auto-reverts if it fails — safer than `send()`.
+
+
+
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
+
+contract Bank {
+    // State variable
+    address public accOwner;
+
+    // Events for transaction tracking
+    event Deposited(address indexed user, uint256 amount);
+    event Withdrawn(address indexed user, uint256 amount);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event AccountClosed(address indexed owner, uint256 balanceTransferred);
+
+    // Constructor - sets initial account owner
+    constructor() {
+        accOwner = msg.sender;
+    }
+
+    // Modifier to restrict access only to owner
+    modifier onlyOwner() {
+        require(msg.sender == accOwner, "You are not the account owner!");
+        _;
+    }
+
+    // Deposit function
+    function deposit() public payable onlyOwner {
+        require(msg.value > 0, "Deposit amount must be greater than 0");
+        emit Deposited(msg.sender, msg.value);
+    }
+
+    // Withdraw function
+    function withdraw(uint256 amount) public onlyOwner {
+        require(amount > 0, "Withdraw amount must be greater than 0");
+        require(amount <= address(this).balance, "Insufficient balance!");
+
+        payable(msg.sender).transfer(amount);
+        emit Withdrawn(msg.sender, amount);
+    }
+
+    // Show account balance (only owner)
+    function showBalance() public view onlyOwner returns (uint256) {
+        return address(this).balance;
+    }
+
+    // Transfer ownership to a new address
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0), "Invalid new owner address!");
+        emit OwnershipTransferred(accOwner, newOwner);
+        accOwner = newOwner;
+    }
+
+    // Close account and transfer all funds to owner
+    function closeAccount() public onlyOwner {
+        uint256 contractBalance = address(this).balance;
+        emit AccountClosed(accOwner, contractBalance);
+        selfdestruct(payable(accOwner));
+    }
+
+    // Fallback functions to accept ether
+    receive() external payable {}
+    fallback() external payable {}
+}
+
