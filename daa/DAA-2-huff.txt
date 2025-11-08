@@ -58,7 +58,8 @@ print_codes(root)	After building tree, prints Huffman codes using DFS.
 Why Greedy Strategy?
 
 Because at every step, we choose two smallest frequency nodes (local optimal choice) and this leads to a globally optimal prefix code tree.
-
+A Greedy Algorithm builds a solution step-by-step, choosing the best possible option at each step without reconsidering previous choices.
+It makes a locally optimal choice, hoping that it will lead to a globally optimal solution.
 Advantages
 
 Produces optimal prefix-free codes (no code is a prefix of another).
@@ -93,3 +94,22 @@ What data structure is used?	Min-Heap / Priority Queue
 Why is it called prefix-free coding?	Because no code is the prefix of another code.
 Is it lossless or lossy?	Lossless
 Time Complexity?	O(n log n) due to heap operations.
+
+
+
+TC: 
+top2 freq: logn + logn
+merge them : constant time
+adjust the heap : logn 
+
+total = nlogn 
+
+Insert all characters and frequencies into a min-heap → takes O(n)
+
+Repeatedly extract two smallest elements and insert their merged node back into heap.
+
+We do this (n – 1) times.
+
+Each extract/insert on a heap takes O(log n) time.
+total = (n-1)*O(logn)=O(nlogn)
+The time complexity is O(n log n) because we use a min-heap, and in each step we remove and insert nodes which take log n time. This happens n times during merging, so total = n log n.
