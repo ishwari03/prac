@@ -265,3 +265,93 @@ I've packed the most likely viva questions (short, exam-ready). Memorize the sho
 * If asked about overflow: use big integers (Python OK) or modulo arithmetic when practical.
 * If asked to improve: mention memoization (O(n)), tabulation, and matrix exponentiation (O(log n)).
 
+
+## Each number is the sum of the previous two numbers:
+
+F(n) = F(n-1) + F(n-2)
+
+Code Breakdown
+1) Recursive Fibonacci Function
+def fibonacci_recursive(n):
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+
+
+If n is 0 → return 0
+
+If n is 1 → return 1
+
+Otherwise, call the function again for (n-1) and (n-2) and return their sum.
+
+This causes many repeated calculations, making it slow.
+
+2) Iterative (Loop-based) Fibonacci Function
+def fibonacci_iterative(n):
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+
+Starts from 0 and 1.
+
+Uses a loop to compute the next Fibonacci numbers.
+
+No repeated work → Fast and Efficient.
+
+3) Time Measurement
+start_time = time.time()
+fib_rec = fibonacci_recursive(n)
+end_time = time.time()
+recursive_time = end_time - start_time
+
+
+time.time() records current time and difference gives execution time.
+
+Same process for iterative.
+
+4) Complexity Print
+print("Recursive Fibonacci:  Time = O(2^n), Space = O(n)")
+print("Iterative Fibonacci:  Time = O(n),   Space = O(1)")
+
+
+Recursive growth is exponential → very slow.
+
+Iterative is linear → fast and memory-efficient.
+
+Step Count Calculation (Very Important for Viva)
+Method	Main Operation	Steps Required	Reason
+Recursive	Calls itself twice for each call	Approx 2^n calls	Repeated recomputation
+Iterative	Loop runs from 2 to n	n steps	Only one pass through loop
+
+So:
+
+Recursive Step Count ≈ 2^n
+
+Iterative Step Count = n - 1 steps
+
+Example:
+If n = 10
+
+Recursive ≈ 2^10 = 1024 steps
+
+Iterative = 10 steps
+
+Viva Questions (Exam-Ready)
+Question	Answer
+What is Fibonacci series?	A series where each term is the sum of the previous two terms.
+Write the recursive formula of Fibonacci.	F(n) = F(n-1) + F(n-2)
+Why is recursive Fibonacci slow?	Because it repeats the same calculations many times, leading to exponential time complexity O(2^n).
+What is the time complexity of recursive Fibonacci?	O(2^n)
+What is the time complexity of iterative Fibonacci?	O(n)
+Which method is more memory efficient and why?	Iterative, because it uses constant space O(1).
+What is the base case in the recursive function?	When n is 0 or 1.
+Why do we measure execution time?	To compare performance of algorithms.
